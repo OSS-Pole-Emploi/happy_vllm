@@ -133,7 +133,8 @@ async def generate(request: Request) -> Response:
             return Response(status_code=499)
         final_output = request_output
 
-    assert final_output is not None
+    if final_output is None:
+        raise ValueError('The final ouput is None')
     prompt = final_output.prompt
     text_outputs = [output.text for output in final_output.outputs]
     finish_reasons = [output.finish_reason for output in request_output.outputs]
