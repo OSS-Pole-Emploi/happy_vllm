@@ -1,13 +1,30 @@
-ARG base_image=nvidia/cuda:12.1.0-devel-ubuntu22.04
 
-# base image
-FROM ${base_image}
+
+FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04 AS builder
+
+COPY prebuildfs /
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Install python common
+RUN install_packages software-properties-common
+
+RUN add-apt-repository -d -y 'ppa:deadsnakes/ppa'
+RUN install_packages python3.11 python3.11-dev python3.11-venv python3-pip
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=true
 
 ENV APP_NAME="happy_vllm"
 ENV API_ENTRYPOINT="/happy_vllm/rs/v1"
 
 LABEL maintainer="Agence Data Services"
 LABEL description="Service REST happy_vllm"
+
+RUN python -m venv /opt/venv \
+    && pip install --upgrade pip
+ENV VIRTUAL_ENV="/opt/venv" PATH="/opt/venv/bin:${PATH}"
 
 WORKDIR /app
 
@@ -18,13 +35,33 @@ COPY src/ src/
 COPY requirements.txt requirements.txt
 COPY version.txt version.txt
 
+RUN python -m pip install -r requirements.txt && python -m pip install .
+
+FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04
+
+COPY prebuildfs /
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Install python common
+RUN install_packages software-properties-common
+
 RUN add-apt-repository -d -y 'ppa:deadsnakes/ppa'
 RUN install_packages python3.11 python3.11-dev python3.11-venv python3-pip
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 
-RUN ln -sfn /usr/bin/python3.11 /usr/bin/python3
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=true
 
-RUN python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt && python3 -m pip install .
+ENV APP_NAME="happy_vllm"
+ENV API_ENTRYPOINT="/happy_vllm/rs/v1"
+
+COPY --from=builder /opt/venv /opt/venv
+
+WORKDIR /app
+
+COPY launch.sh /app
 
 # Start API
-EXPOSE 8501
-CMD ["python3", "src/happy_vllm/launch.py"]
+EXPOSE 8000
+CMD ["python", "/app/launch.py"]
