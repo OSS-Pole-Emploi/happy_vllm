@@ -1,7 +1,7 @@
 vllm==0.3.2
 fastapi==0.109.2
 pydantic-settings==2.2.1
-uvicorn[standard]==0.27.1
+uvicorn[standard]==0.29.0
 starlette-prometheus==0.9.0
 numpy==1.26.4
 torch==2.1.2
