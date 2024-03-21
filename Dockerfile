@@ -29,6 +29,7 @@ WORKDIR /app
 # Install package
 COPY pyproject.toml setup.py README.md requirements.txt version.txt /app
 COPY src/ /app
+RUN ls
 
 RUN python -m pip install -r requirements.txt && python -m pip install .
 
