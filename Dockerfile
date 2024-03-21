@@ -28,8 +28,7 @@ WORKDIR /app
 
 # Install package
 COPY pyproject.toml setup.py README.md requirements.txt version.txt /app
-COPY src/ /app
-RUN ls
+COPY src/happy_vllm /app/src/happy_vllm
 
 RUN python -m pip install -r requirements.txt && python -m pip install .
 
