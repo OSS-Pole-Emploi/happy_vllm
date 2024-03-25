@@ -1,7 +1,23 @@
+#!/usr/bin/env python3
+# Copyright (C) <2018-2024>  <Agence Data Services, DSI France Travail>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import ssl
 import json
 
-from typing import Literal, Optional
+from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from argparse import Namespace, ArgumentParser, BooleanOptionalAction
 
@@ -43,7 +59,7 @@ class ApplicationSettings(BaseSettings):
     allowed_origins: list = DEFAULT_ALLOWED_ORIGINS
     allowed_methods: list = DEFAULT_ALLOWED_METHODS
     allowed_headers: list = DEFAULT_ALLOWED_HEADERS
-    uvicorn_log_level: Literal[*CHOICES_UVICORN_LOG_LEVEL] = DEFAULT_UVICORN_LOG_LEVEL # type: ignore
+    uvicorn_log_level: str = DEFAULT_UVICORN_LOG_LEVEL
     ssl_keyfile: Optional[str] = DEFAULT_SSL_KEYFILE
     ssl_certfile: Optional[str] = DEFAULT_SSL_CERTFILE
     ssl_ca_certs: Optional[str] = DEFAULT_SSL_CA_CERTS
