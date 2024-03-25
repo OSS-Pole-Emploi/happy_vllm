@@ -1,8 +1,11 @@
+import ssl
+import json
 import argparse
 
 from vllm.engine.arg_utils import AsyncEngineArgs
 
-def make_arg_parser():
+
+def parse_args():
     parser = argparse.ArgumentParser(description="REST API server for vLLM, production ready")
 
     parser.add_argument("--host",
@@ -35,5 +38,32 @@ def make_arg_parser():
                         type=json.loads,
                         default=["*"],
                         help="allowed headers")
+    parser.add_argument("--uvicorn-log-level",
+                        type=str,
+                        default="info",
+                        choices=['debug', 'info', 'warning', 'error', 'critical', 'trace'],
+                        help="log level for uvicorn")
+    parser.add_argument("--ssl-keyfile",
+                        type=str,
+                        default=None,
+                        help="The file path to the SSL key file")
+    parser.add_argument("--ssl-certfile",
+                        type=str,
+                        default=None,
+                        help="The file path to the SSL cert file")
+    parser.add_argument("--ssl-ca-certs",
+                        type=str,
+                        default=None,
+                        help="The CA certificates file")
+    parser.add_argument("--ssl-cert-reqs",
+                        type=int,
+                        default=int(ssl.CERT_NONE),
+                        help="Whether client certificate is required (see stdlib ssl module's)")
+    parser.add_argument("--root-path",
+                        type=str,
+                        default=None,
+                        help="FastAPI root_path when app is behind a path based routing proxy")
     parser = AsyncEngineArgs.add_cli_args(parser)
-    cli_args = parser.parse_args()
+    args = parser.parse_args()
+
+    return args
