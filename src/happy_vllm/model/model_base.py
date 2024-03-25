@@ -27,31 +27,11 @@ from typing import Any, Tuple, Union, List
 from vllm.engine.arg_utils import AsyncEngineArgs
 from vllm.engine.async_llm_engine import AsyncLLMEngine
 from vllm.transformers_utils.tokenizer import TokenizerGroup
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from lmformatenforcer.integrations.transformers import build_token_enforcer_tokenizer_data
 
 from happy_vllm import utils
 
 logger = logging.getLogger(__name__)
-
-
-class ModelSettings(BaseSettings):
-    """Download settings
-
-    This class is used for settings management purpose, have a look at the pydantic
-    documentation for more details : https://pydantic-docs.helpmanual.io/usage/settings/
-
-    By default, it looks for environment variables (case insensitive) to set the settings
-    if a variable is not found, it looks for a file name .env in your working directory
-    where you can declare the values of the variables and finally it sets the values
-    to the default ones one can define below
-    """
-    model : str = 'None'
-    model_name : str = '?'
-    tokenizer_name : str = 'None'
-    TEST_MODELS_DIR : str = 'None'
-
-    model_config = SettingsConfigDict(env_file=".env", extra='ignore', protected_namespaces=('settings', ))
 
 
 class Model:
@@ -81,15 +61,8 @@ class Model:
         Returns:
             Tuple[Any, dict]: A tuple containing the model and a dict of metadata about it.
         """
-        settings = ModelSettings(**kwargs)
-        if settings.model != 'None':
-            cli_args.model = settings.model
-        if settings.model_name != '?':
-            model_name = settings.model_name
-        else:
-            model_name = cli_args.model_name
 
-        self._model_conf = {'model_name': model_name}
+        self._model_conf = {'model_name': cli_args.model_name}
 
         logger.info(f"Loading the model from {cli_args.model}")
         if model_name != "TEST MODEL":
@@ -106,8 +79,8 @@ class Model:
         else:
             self.max_model_len = 2048
             self.original_truncation_side = 'right'
-            self._tokenizer = AutoTokenizer.from_pretrained(settings.tokenizer_name,
-                                                     cache_dir=settings.TEST_MODELS_DIR, truncation_side=self.original_truncation_side)
+            self._tokenizer = AutoTokenizer.from_pretrained(utils.TEST_TOKENIZER_NAME,
+                                                     cache_dir=os.environ["TEST_MODELS_DIR"], truncation_side=self.original_truncation_side)
             self._tokenizer_lmformatenforcer = build_token_enforcer_tokenizer_data(self._tokenizer)
             self._model = MockModel(self._tokenizer)
         logger.info(f"Model loaded")

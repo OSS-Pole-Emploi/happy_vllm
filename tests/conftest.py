@@ -42,8 +42,11 @@ import os
 import pytest
 from pathlib import Path
 from argparse import Namespace
-from fastapi.testclient import TestClient
 from aioprometheus import REGISTRY
+from fastapi.testclient import TestClient
+
+from happy_vllm import utils
+
 
 # Set paths
 TEST_DIR = Path(__file__).parent.resolve()
@@ -55,7 +58,7 @@ os.environ["api_entrypoint"] = "/tests"
 os.environ["MODEL_NAME"] = "TEST MODEL"
 os.environ["MODEL"] = "test"
 os.environ["TEST_MODELS_DIR"] = str(TEST_MODELS_DIR)
-os.environ["tokenizer_name"] = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+os.environ["tokenizer_name"] = utils.TEST_TOKENIZER_NAME
 
 
 @pytest.fixture(scope="session")
