@@ -17,7 +17,6 @@
 
 from fastapi import FastAPI
 from argparse import Namespace
-from prometheus_client import make_asgi_app
 from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
