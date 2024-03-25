@@ -19,6 +19,7 @@
 """
 
 
+import os
 import logging
 from pathlib import Path
 from argparse import Namespace
@@ -65,7 +66,7 @@ class Model:
         self._model_conf = {'model_name': cli_args.model_name}
 
         logger.info(f"Loading the model from {cli_args.model}")
-        if model_name != "TEST MODEL":
+        if cli_args.model_name != "TEST MODEL":
             engine_args = AsyncEngineArgs.from_cli_args(cli_args) 
             self._model = AsyncLLMEngine.from_engine_args(engine_args) # type: ignore
             if isinstance(self._model.engine.tokenizer, TokenizerGroup): # type: ignore

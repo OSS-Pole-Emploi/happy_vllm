@@ -71,47 +71,42 @@ def get_model_settings(parser: ArgumentParser) -> BaseSettings:
         model_name: str = default_args.model_name
         tokenizer: Optional[str] = default_args.tokenizer
         tokenizer_mode: str = default_args.tokenizer_mode
-        trust_remote_code: bool = default_args.trust_remote_code
+        trust_remote_code: bool = False
         download_dir: Optional[str] = default_args.download_dir
         load_format: str = default_args.load_format
         dtype: str = default_args.dtype
         kv_cache_dtype: str = default_args.kv_cache_dtype
         seed: int = default_args.seed
         max_model_len: Optional[int] = default_args.max_model_len
-        worker_use_ray: bool = default_args.worker_use_ray
+        worker_use_ray: bool = False
         pipeline_parallel_size: int = default_args.pipeline_parallel_size
         tensor_parallel_size: int = default_args.tensor_parallel_size
         max_parallel_loading_workers: Optional[int] = default_args.max_parallel_loading_workers
         block_size: int = default_args.block_size
-        enable_prefix_caching: bool = default_args.enable_prefix_caching
+        enable_prefix_caching: bool = False
         swap_space: int = default_args.swap_space
         gpu_memory_utilization: float = default_args.gpu_memory_utilization
         max_num_batched_tokens: Optional[int] = default_args.max_num_batched_tokens
         max_num_seqs: int = default_args.max_num_seqs
-        max_logprobs: int = default_args.max_logprobs
-        disable_log_stats: bool = default_args.disable_log_stats
+        disable_log_stats: bool = False
         revision: Optional[str] = default_args.revision
         code_revision: Optional[str] = default_args.code_revision
         tokenizer_revision: Optional[str] = default_args.tokenizer_revision
         quantization: Optional[str] = default_args.quantization
-        enforce_eager: bool = default_args.enforce_eager
+        enforce_eager: bool = False
         max_context_len_to_capture: int = default_args.max_context_len_to_capture
-        disable_custom_all_reduce: bool = default_args.disable_custom_all_reduce
-        tokenizer_pool_size: int = default_args.tokenizer_pool_size
-        tokenizer_pool_type: str = default_args.tokenizer_pool_type
-        tokenizer_pool_extra_config: Optional[dict] = default_args.tokenizer_pool_extra_config
-        enable_lora: bool = default_args.enable_lora
+        disable_custom_all_reduce: bool = False
+        enable_lora: bool = False
         max_loras: int = default_args.max_loras
         max_lora_rank: int = default_args.max_lora_rank
         lora_extra_vocab_size: int = default_args.lora_extra_vocab_size
-        lora_dtype: str = default_args.lora_extra_vocab_size
+        lora_dtype: str = default_args.lora_dtype
         max_cpu_loras: Optional[int] = default_args.max_cpu_loras
         device: str = default_args.device
-        ray_workers_use_nsight: bool = default_args.ray_workers_use_nsight
-        scheduler_delay_factor: float = default_args.scheduler_delay_factor
+        ray_workers_use_nsight: bool = False
         max_log_len: Optional[int] = default_args.max_log_len
-        disable_log_requests: bool = default_args.disable_log_requests
-        engine_use_ray: bool = default_args.engine_use_ray
+        disable_log_requests: bool = False
+        engine_use_ray: bool = False
 
         model_config = SettingsConfigDict(env_file=".env", extra='ignore', protected_namespaces=('settings', ))
 
@@ -213,5 +208,5 @@ def parse_args() -> Namespace:
     parser.set_defaults(**model_settings.dict())
     # Gets the args
     args = parser.parse_args()
-
+    print('CCCCCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOOOOOOOOOOOOCCCCCCCCCCCCCCCCCCCCCCCCCCC', args)
     return args

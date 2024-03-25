@@ -45,8 +45,6 @@ from argparse import Namespace
 from aioprometheus import REGISTRY
 from fastapi.testclient import TestClient
 
-from happy_vllm import utils
-
 
 # Set paths
 TEST_DIR = Path(__file__).parent.resolve()
@@ -58,6 +56,10 @@ os.environ["api_entrypoint"] = "/tests"
 os.environ["MODEL_NAME"] = "TEST MODEL"
 os.environ["MODEL"] = "test"
 os.environ["TEST_MODELS_DIR"] = str(TEST_MODELS_DIR)
+
+# We must import the utils module after setting the environnement variables because
+# it also imports the .core folder via the __init__ and it may impact the other tests
+from happy_vllm import utils
 os.environ["tokenizer_name"] = utils.TEST_TOKENIZER_NAME
 
 
@@ -65,7 +67,9 @@ os.environ["tokenizer_name"] = utils.TEST_TOKENIZER_NAME
 def test_base_client() -> TestClient:
     """Basic TestClient that do not run startup and shutdown events"""
     from happy_vllm.application import declare_application
-    app = declare_application(Namespace(explicit_errors=False))
+    app = declare_application(Namespace(explicit_errors=False,
+                                        model_name=os.environ['MODEL_NAME'],
+                                        model=os.environ['MODEL']))
     return TestClient(app)
 
 
@@ -83,7 +87,9 @@ def test_complete_client(monkeypatch) -> TestClient:
     monkeypatch.setattr(resources, "Model", Model)
 
     from happy_vllm.application import declare_application
-    app = declare_application(Namespace(explicit_errors=False))
+    app = declare_application(Namespace(explicit_errors=False,
+                                        model_name=os.environ['MODEL_NAME'],
+                                        model=os.environ['MODEL']))
     
     with TestClient(app) as client:
         yield client
