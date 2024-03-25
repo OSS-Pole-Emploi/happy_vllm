@@ -208,5 +208,4 @@ def parse_args() -> Namespace:
     parser.set_defaults(**model_settings.dict())
     # Gets the args
     args = parser.parse_args()
-    print('CCCCCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOOOOOOOOOOOOCCCCCCCCCCCCCCCCCCCCCCCCCCC', args)
     return args

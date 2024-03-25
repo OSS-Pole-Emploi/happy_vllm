@@ -26,7 +26,7 @@ from happy_vllm.application import declare_application
 def main() -> None:
     args = parse_args()
 
-    app = declare_application(cli_args=args)
+    app = declare_application(args=args)
     uvicorn.run(app,
                 host=args.host,
                 port=args.port,

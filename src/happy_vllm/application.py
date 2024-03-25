@@ -26,7 +26,7 @@ from happy_vllm.middlewares.exception import ExceptionHandlerMiddleware
 from aioprometheus import MetricsMiddleware
 from aioprometheus.asgi.starlette import metrics
 
-def declare_application(cli_args: Namespace) -> FastAPI:
+def declare_application(args: Namespace) -> FastAPI:
     """Create the FastAPI application
 
     See https://fastapi.tiangolo.com/tutorial/first-steps/ to learn how to
@@ -35,7 +35,7 @@ def declare_application(cli_args: Namespace) -> FastAPI:
     app = FastAPI(
         title=f"REST API form {settings.app_name}",
         description=f"Use {settings.app_name} thanks to FastAPI",
-        lifespan=get_lifespan(cli_args=cli_args)
+        lifespan=get_lifespan(args=args)
     )
 
     # Add PrometheusMiddleware
@@ -55,7 +55,7 @@ def declare_application(cli_args: Namespace) -> FastAPI:
     )
 
     # Add exception middleware
-    if cli_args.explicit_errors:
+    if args.explicit_errors:
         app.add_middleware(ExceptionHandlerMiddleware)
 
     #

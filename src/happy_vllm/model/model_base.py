@@ -51,23 +51,23 @@ class Model:
         """return the state of the model"""
         return self._loaded
 
-    def loading(self, cli_args: Namespace, **kwargs):
+    def loading(self, args: Namespace, **kwargs):
         """load the model"""
-        self._load_model(cli_args, **kwargs)
+        self._load_model(args, **kwargs)
         self._loaded = True
 
-    def _load_model(self, cli_args: Namespace, **kwargs) -> None:
+    def _load_model(self, args: Namespace, **kwargs) -> None:
         """Load a model from a file
 
         Returns:
             Tuple[Any, dict]: A tuple containing the model and a dict of metadata about it.
         """
 
-        self._model_conf = {'model_name': cli_args.model_name}
+        self._model_conf = {'model_name': args.model_name}
 
-        logger.info(f"Loading the model from {cli_args.model}")
-        if cli_args.model_name != "TEST MODEL":
-            engine_args = AsyncEngineArgs.from_cli_args(cli_args) 
+        logger.info(f"Loading the model from {args.model}")
+        if args.model_name != "TEST MODEL":
+            engine_args = AsyncEngineArgs.from_cli_args(args) 
             self._model = AsyncLLMEngine.from_engine_args(engine_args) # type: ignore
             if isinstance(self._model.engine.tokenizer, TokenizerGroup): # type: ignore
                 self._tokenizer = self._model.engine.tokenizer.tokenizer # type: ignore
@@ -239,7 +239,6 @@ class MockModel():
         stream_ids = [self.tokenizer(stream_txt, add_special_tokens=False, truncation=True, max_length=sampling_params.max_tokens)['input_ids'] for stream_txt in stream_txts]
         max_length = max([len(element) for element in stream_ids]) + 1
         stream_tmp = [[self.tokenizer.decode(text[:i]) for text in stream_ids] for i in range(max_length)]
-        print(stream_tmp)
         stream = [MockGenerateResponse(prompt, texts) for texts in stream_tmp]
         # Mock the length finish_reason
         for i in range(sampling_params.n):
