@@ -54,68 +54,64 @@ class ApplicationSettings(BaseSettings):
 def parse_args():
     parser = argparse.ArgumentParser(description="REST API server for vLLM, production ready")
 
+    application_settings = ApplicationSettings()
+
     parser.add_argument("--host",
                         type=str,
-                        default=DEFAULT_HOST,
+                        default=application_settings.host,
                         help="host name")
     parser.add_argument("--port",
                         type=int,
-                        default=DEFAULT_PORT,
+                        default=application_settings.port,
                         help="port number")
     parser.add_argument("--model-name",
                         type=str,
                         default='?',
                         help="The name of the model given by the /info endpoint of the API")
-    if DEFAULT_EXPLICIT_ERRORS:
-        action_explicit_errors = "store_false"
-    else:
-        action_explicit_errors = "store_true"
     parser.add_argument("--explicit-errors",
-                        action=action_explicit_errors,
+                        default=application_settings.explicit_errors,
+                        action=argparse.BooleanOptionalAction,
                         help="If True, the underlying python errors are sent back via the API")
-    if DEFAULT_ALLOW_CREDENTIALS:
-        action_allow_credentials = "store_false"
-    else:
-        action_allow_credentials = "store_true"
-    parser.add_argument("--allow-credentials",
-                        action=action_allow_credentials,
+    parser.add_argument('--allow-credentials',
+                        default=application_settings.allow_credentials,
+                        action=argparse.BooleanOptionalAction,
                         help="allow credentials")
     parser.add_argument("--allowed-origins",
                         type=json.loads,
-                        default=DEFAULT_ALLOWED_ORIGINS,
+                        default=application_settings.allowed_origins,
                         help="allowed origins")
     parser.add_argument("--allowed-methods",
                         type=json.loads,
-                        default=DEFAULT_ALLOWED_METHODS,
+                        default=application_settings.allowed_methods,
                         help="allowed methods")
     parser.add_argument("--allowed-headers",
                         type=json.loads,
-                        default=DEFAULT_ALLOWED_HEADERS,
+                        default=application_settings.allowed_headers,
                         help="allowed headers")
     parser.add_argument("--uvicorn-log-level",
                         type=str,
-                        default=DEFAULT_UVICORN_LOG_LEVEL,
+                        default=application_settings.uvicorn_log_level,
                         choices=CHOICES_UVICORN_LOG_LEVEL,
                         help="log level for uvicorn")
     parser.add_argument("--ssl-keyfile",
                         type=str,
-                        default=DEFAULT_SSL_KEYFILE,
+                        default=application_settings.ssl_keyfile,
                         help="The file path to the SSL key file")
     parser.add_argument("--ssl-certfile",
                         type=str,
-                        default=DEFAULT_SSL_CERTFILE,
+                        default=application_settings.ssl_certfile,
                         help="The file path to the SSL cert file")
     parser.add_argument("--ssl-ca-certs",
                         type=str,
-                        default=DEFAULT_SSL_CA_CERTS,
+                        default=application_settings.ssl_ca_certs,
                         help="The CA certificates file")
     parser.add_argument("--ssl-cert-reqs",
                         type=int,
-                        default=DEFAULT_SSL_CERT_REQS,
+                        default=application_settings.ssl_cert_reqs,
                         help="Whether client certificate is required (see stdlib ssl module's)")
     parser.add_argument("--root-path",
                         type=str,
-                        default=DEFAULT_ROOT_PATH,
+                        default=application_settings.root_path,
                         help="FastAPI root_path when app is behind a path based routing proxy")
     parser = AsyncEngineArgs.add_cli_args(parser)
     args = parser.parse_args()
