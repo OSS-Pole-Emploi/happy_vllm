@@ -18,15 +18,15 @@ import uvicorn
 import argparse
 from vllm.engine.arg_utils import AsyncEngineArgs
 
-from happy_vllm.cli_args import parse_args
 from happy_vllm.application import declare_application
+from happy_vllm.utils_args import parse_args, ApplicationSettings
 
 
 def main() -> None:
     args = parse_args()
 
     app = declare_application(cli_args=args)
-
+    settings = ApplicationSettings()
     uvicorn.run(app,
                 host=args.host,
                 port=args.port,

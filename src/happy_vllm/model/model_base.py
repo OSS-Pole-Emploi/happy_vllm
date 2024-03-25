@@ -44,7 +44,7 @@ class ModelSettings(BaseSettings):
     By default, it looks for environment variables (case insensitive) to set the settings
     if a variable is not found, it looks for a file name .env in your working directory
     where you can declare the values of the variables and finally it sets the values
-    to the default ones one can define above
+    to the default ones one can define below
     """
     model : str = 'None'
     model_name : str = '?'
