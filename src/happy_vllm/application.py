@@ -19,7 +19,6 @@ from fastapi import FastAPI
 from argparse import Namespace
 from fastapi.middleware.cors import CORSMiddleware
 
-from .core.config import settings
 from .routers import main_routeur
 from .core.resources import get_lifespan
 from happy_vllm.middlewares.exception import ExceptionHandlerMiddleware
@@ -33,8 +32,8 @@ def declare_application(args: Namespace) -> FastAPI:
     customize your FastAPI application
     """
     app = FastAPI(
-        title=f"REST API form {settings.app_name}",
-        description=f"Use {settings.app_name} thanks to FastAPI",
+        title=f"REST API for vLLM",
+        description=f"A REST API for vLLM, production ready",
         lifespan=get_lifespan(args=args)
     )
 
@@ -59,6 +58,6 @@ def declare_application(args: Namespace) -> FastAPI:
         app.add_middleware(ExceptionHandlerMiddleware)
 
     #
-    app.include_router(main_routeur, prefix=settings.api_entrypoint)
+    app.include_router(main_routeur, prefix=args.api_endpoint_prefix)
 
     return app

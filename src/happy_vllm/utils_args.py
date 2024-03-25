@@ -25,6 +25,8 @@ from vllm.engine.arg_utils import AsyncEngineArgs
 
 
 DEFAULT_MODEL_NAME = '?'
+DEFAULT_APP_NAME = "happy_vllm"
+DEFAULT_API_ENDPOINT_PREFIX = "/happy_vllm/rs/v1"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 5000
 DEFAULT_EXPLICIT_ERRORS = False
@@ -65,6 +67,8 @@ class ApplicationSettings(BaseSettings):
     ssl_ca_certs: Optional[str] = DEFAULT_SSL_CA_CERTS
     ssl_cert_reqs: int = DEFAULT_SSL_CERT_REQS
     root_path: Optional[str] = DEFAULT_ROOT_PATH
+    app_name: str = DEFAULT_APP_NAME
+    api_endpoint_prefix: str = DEFAULT_API_ENDPOINT_PREFIX
 
     model_config = SettingsConfigDict(env_file=".env", extra='ignore', protected_namespaces=('settings', ))
 
@@ -155,6 +159,14 @@ def get_parser() -> ArgumentParser:
                         type=str,
                         default=DEFAULT_MODEL_NAME,
                         help="The name of the model given by the /info endpoint of the API")
+    parser.add_argument("--app-name",
+                        type=str,
+                        default=DEFAULT_APP_NAME,
+                        help="The name of the application")
+    parser.add_argument("--api-endpoint-prefix",
+                        type=str,
+                        default=DEFAULT_API_ENDPOINT_PREFIX,
+                        help="The prefix for the API endpoints")
     parser.add_argument("--explicit-errors",
                         default=application_settings.explicit_errors,
                         action=BooleanOptionalAction,
