@@ -17,8 +17,8 @@
 
 from fastapi import FastAPI
 from argparse import Namespace
+from prometheus_client import make_asgi_app
 from fastapi.middleware.cors import CORSMiddleware
-from starlette_prometheus import metrics, PrometheusMiddleware
 
 from .core.config import settings
 from .routers import main_routeur
@@ -38,9 +38,9 @@ def declare_application(cli_args: Namespace) -> FastAPI:
         lifespan=get_lifespan(cli_args=cli_args)
     )
 
-    # Add PrometheusMiddleware
-    app.add_middleware(PrometheusMiddleware)
-    app.add_route("/metrics", metrics)
+    # Add prometheus asgi middleware to route /metrics requests
+    metrics_app = make_asgi_app()
+    app.mount("/metrics", metrics_app)
 
     # CORS middleware that allows all origins to avoid CORS problems
     # see https://fastapi.tiangolo.com/tutorial/cors/#use-corsmiddleware
