@@ -21,13 +21,13 @@ from happy_vllm import utils_args
 def test_get_parser():
     parser = utils_args.get_parser()
     application_settings = utils_args.ApplicationSettings()
-    for key, value in application_settings.dict().items():
+    for key, value in application_settings.model_dump().items():
         assert parser.get_default(key) == value
 
 def test_get_model_settings():
     parser = utils_args.get_parser()
     model_settings = utils_args.get_model_settings(parser)
-    for key, value in model_settings.dict().items():
+    for key, value in model_settings.model_dump().items():
         if key not in ['model', 'model_name']:
             if parser.get_default(key) is not None:
                 assert parser.get_default(key) == value

@@ -233,7 +233,7 @@ def parse_args() -> Namespace:
     # Gets the default values of the model variables via pydantic
     model_settings = get_model_settings(parser)
     # Sets the default values of the model variables in the parser
-    parser.set_defaults(**model_settings.dict())
+    parser.set_defaults(**model_settings.model_dump())
     # Gets the args
     args = parser.parse_args()
     return args
