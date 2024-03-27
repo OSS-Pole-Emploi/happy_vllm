@@ -161,11 +161,11 @@ def get_parser() -> ArgumentParser:
                         help="The name of the model given by the /info endpoint of the API")
     parser.add_argument("--app-name",
                         type=str,
-                        default=DEFAULT_APP_NAME,
+                        default=application_settings.app_name,
                         help="The name of the application")
     parser.add_argument("--api-endpoint-prefix",
                         type=str,
-                        default=DEFAULT_API_ENDPOINT_PREFIX,
+                        default=application_settings.api_endpoint_prefix,
                         help="The prefix for the API endpoints")
     parser.add_argument("--explicit-errors",
                         default=application_settings.explicit_errors,

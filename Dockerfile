@@ -17,7 +17,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=true \
     APP_NAME="happy_vllm" \
-    API_ENTRYPOINT="/happy_vllm/rs/v1"
+    API_ENDPOINT_PREFIX="/happy_vllm/rs/v1"
 
 RUN python -m venv /opt/venv \
     && pip install --upgrade pip
@@ -48,7 +48,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/venv/bin:${PATH}" \
     PIP_NO_CACHE_DIR=true \
     APP_NAME="happy_vllm" \
-    API_ENTRYPOINT="/happy_vllm/rs/v1"
+    API_ENDPOINT_PREFIX="/happy_vllm/rs/v1"
 
 COPY --from=builder /opt/venv /opt/venv
 

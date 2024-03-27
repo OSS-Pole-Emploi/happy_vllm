@@ -46,6 +46,7 @@ class Model:
         self._model_conf = None
         self._model_explainer = None
         self._loaded = False
+        self.app_name = kwargs['app_name']
 
     def is_model_loaded(self):
         """return the state of the model"""
@@ -83,7 +84,7 @@ class Model:
             self._tokenizer = AutoTokenizer.from_pretrained(utils.TEST_TOKENIZER_NAME,
                                                      cache_dir=os.environ["TEST_MODELS_DIR"], truncation_side=self.original_truncation_side)
             self._tokenizer_lmformatenforcer = build_token_enforcer_tokenizer_data(self._tokenizer)
-            self._model = MockModel(self._tokenizer)
+            self._model = MockModel(self._tokenizer, self.app_name)
         logger.info(f"Model loaded")
 
     def tokenize(self, text: str) -> List[int]:
@@ -231,8 +232,9 @@ def find_indices_sub_list_in_list(big_list: list, sub_list: list) -> list:
 
 class MockModel():
 
-    def __init__(self, tokenizer):
+    def __init__(self, tokenizer, app_name: str = "happy_vllm"):
         self.tokenizer = tokenizer
+        self.app_name = app_name
 
     async def generate(self, prompt, sampling_params, request_id):
         stream_txts = [f"n={i} "*i + prompt + " This is the generated text. I find it really good don't you ?" for i in range(sampling_params.n)]

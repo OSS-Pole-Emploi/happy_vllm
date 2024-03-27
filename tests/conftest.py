@@ -52,7 +52,7 @@ TEST_MODELS_DIR = TEST_DIR / "data" / "models"
 
 # Set environment variables for testing
 os.environ["app_name"] = "APP_TESTS"
-os.environ["api_entrypoint"] = "/tests"
+os.environ["api_endpoint_prefix"] = "/tests"
 os.environ["MODEL_NAME"] = "TEST MODEL"
 os.environ["MODEL"] = "test"
 os.environ["TEST_MODELS_DIR"] = str(TEST_MODELS_DIR)
@@ -69,7 +69,9 @@ def test_base_client() -> TestClient:
     from happy_vllm.application import declare_application
     app = declare_application(Namespace(explicit_errors=False,
                                         model_name=os.environ['MODEL_NAME'],
-                                        model=os.environ['MODEL']))
+                                        model=os.environ['MODEL'],
+                                        app_name=os.environ["app_name"],
+                                        api_endpoint_prefix=os.environ["api_endpoint_prefix"]))
     return TestClient(app)
 
 
@@ -89,7 +91,9 @@ def test_complete_client(monkeypatch) -> TestClient:
     from happy_vllm.application import declare_application
     app = declare_application(Namespace(explicit_errors=False,
                                         model_name=os.environ['MODEL_NAME'],
-                                        model=os.environ['MODEL']))
+                                        model=os.environ['MODEL'],
+                                        app_name=os.environ["app_name"],
+                                        api_endpoint_prefix=os.environ["api_endpoint_prefix"]))
     
     with TestClient(app) as client:
         yield client

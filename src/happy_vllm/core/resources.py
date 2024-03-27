@@ -41,7 +41,7 @@ def get_lifespan(args: Namespace) -> Callable:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         # Load the ML model
-        model = Model()
+        model = Model(app_name=args.app_name)
         model.loading(args=args)
         logger.info("Model loaded")
 
