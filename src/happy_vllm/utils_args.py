@@ -145,7 +145,7 @@ def get_parser() -> ArgumentParser:
     """
     parser = ArgumentParser(description="REST API server for vLLM, production ready")
 
-    application_settings = ApplicationSettings()
+    application_settings = ApplicationSettings(_env_parse_none_str='None')
 
     parser.add_argument("--host",
                         type=str,
